@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 
@@ -15,9 +16,25 @@ namespace Alexw.ProxyableClient.ConsoleApplication
             }
             using (var client = new HttpClient())
             {
-                using (var result = client.GetAsync(sourceUri).Result)
+                try
                 {
-                    return !result.IsSuccessStatusCode ? "Error: HttpStatusCode: " + result.StatusCode : result.Content.ReadAsStringAsync().Result;
+                    using (var result = client.GetAsync(sourceUri).Result)
+                    {
+                        if (result.IsSuccessStatusCode)
+                            return "Error: HttpStatusCode: " + result.StatusCode;
+
+                        return result.Content.ReadAsStringAsync().Result;
+                    }
+                }
+                catch (AggregateException ae)
+                {
+                    var e = ae.InnerExceptions.First();
+                    while (e.InnerException != null) e = e.InnerException;
+                    return "Error: " + e.Message;
+                }
+                catch (HttpRequestException hre)
+                {
+                    return "Error: " + hre.GetBaseException().Message;
                 }
             }
         }
