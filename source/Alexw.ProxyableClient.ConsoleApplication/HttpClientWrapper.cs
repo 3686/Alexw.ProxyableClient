@@ -17,7 +17,7 @@ namespace Alexw.ProxyableClient.ConsoleApplication
             {
                 using (var result = client.GetAsync(sourceUri).Result)
                 {
-                    return !result.IsSuccessStatusCode ? "(Not Found)" : result.Content.ReadAsStringAsync().Result;
+                    return !result.IsSuccessStatusCode ? "Error: HttpStatusCode: " + result.StatusCode : result.Content.ReadAsStringAsync().Result;
                 }
             }
         }
