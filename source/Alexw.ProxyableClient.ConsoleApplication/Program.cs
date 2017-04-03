@@ -24,6 +24,9 @@ namespace Alexw.ProxyableClient.ConsoleApplication
                 Console.WriteLine("Fetching {0} without the proxy", settings.SourceUri);
                 var resultWithoutProxy = HttpClientWrapper.GetPlainTextResult(settings.SourceUri, null);
                 Console.WriteLine("Result: {0}", resultWithoutProxy);
+
+                Console.WriteLine();
+                Console.WriteLine("-----------------------------------");
                 Console.WriteLine();
 
                 Console.WriteLine("Fetching {0} with the proxy. ProxyUri: {1}", settings.SourceUri, settings.ProxyUri);

@@ -9,19 +9,19 @@ namespace Alexw.ProxyableClient.ConsoleApplication
     {
         public static string GetPlainTextResult(Uri sourceUri, Uri proxyUri)
         {
-            var settings = new HttpClientHandler();
+            var requestHandler = new HttpClientHandler();
             if (proxyUri != null)
             {
-                settings.Proxy = new WebProxy(proxyUri);
+                requestHandler.Proxy = new WebProxy(proxyUri);
             }
-            using (var client = new HttpClient())
+            using (var client = new HttpClient(requestHandler))
             {
                 try
                 {
                     using (var result = client.GetAsync(sourceUri).Result)
                     {
-                        if (result.IsSuccessStatusCode)
-                            return "Error: HttpStatusCode: " + result.StatusCode;
+                        if (!result.IsSuccessStatusCode)
+                            throw new HttpRequestException("HttpStatusCode: " + result.StatusCode);
 
                         return result.Content.ReadAsStringAsync().Result;
                     }
